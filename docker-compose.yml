@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: ./docker/app/Dockerfile
+    tty: true
+    ports:
+      - 8080:8080
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+
+  mysql:
+    container_name: mysql
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    tty: true
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: "you-tree"
+      MYSQL_USER: "developer"
+      MYSQL_PASSWORD: "pass"
+    volumes:
+      - type: volume
+        source: mysql_data
+        target: /var/lib/mysql
+
+volumes:
+  mysql_data:
