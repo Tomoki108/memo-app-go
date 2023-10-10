@@ -23,5 +23,5 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, tree)
 	})
-	r.Run()
+	r.Run() // defaultの8080ポートでAPIを公開
 }
