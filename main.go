@@ -16,12 +16,33 @@ type Tree struct {
 }
 
 func main() {
-	var tree Tree
-	database.Db.First(&tree, 1)
+	var trees []Tree
+
+	database.Db.Find(&trees)
 
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET("/trees", func(c *gin.Context) {
+		c.JSON(200, trees)
+	})
+
+	// tree構造体のCRUD APIを実装する（GET trees以外）
+
+	r.GET("/trees/:id", func(c *gin.Context) {
+		var tree Tree
+		if err := database.Db.Where("id = ?", c.Param("id")).First(&tree).Error; err != nil {
+			c.AbortWithStatus(404)
+			println(err)
+		} else {
+			c.JSON(200, tree)
+		}
+	})
+
+	r.POST("/trees", func(c *gin.Context) {
+		var tree Tree
+		c.BindJSON(&tree)
+		database.Db.Create(&tree)
 		c.JSON(200, tree)
 	})
+
 	r.Run() // defaultの8080ポートでAPIを公開
 }
