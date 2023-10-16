@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"time"
 	"you-tree-backend/database"
 
@@ -8,11 +9,11 @@ import (
 )
 
 type Tree struct {
-	Id          int
-	Title       string
-	Description string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	Id          int       `json:"id" gorm:"primary_key"`
+	Title       string    `json:"title,omitempty" gorm:"not null"`
+	Description string    `json:"description"`
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func main() {
@@ -26,15 +27,19 @@ func main() {
 
 	r.POST("/trees", func(c *gin.Context) {
 		var tree Tree
-		c.BindJSON(&tree)
-		database.Db.Create(&tree)
-		c.JSON(200, tree)
+		if err := c.BindJSON(&tree); err != nil {
+			fmt.Println(err)
+			c.AbortWithStatus(400)
+		} else {
+			database.Db.Create(&tree)
+			c.JSON(200, tree)
+		}
 	})
 
 	r.GET("/trees/:id", func(c *gin.Context) {
 		var tree Tree
 		if err := database.Db.Where("id = ?", c.Param("id")).First(&tree).Error; err != nil {
-			println(err)
+			fmt.Println(err)
 			c.AbortWithStatus(404)
 		} else {
 			c.JSON(200, tree)
@@ -44,7 +49,7 @@ func main() {
 	r.DELETE("/trees/:id", func(c *gin.Context) {
 		var tree Tree
 		if err := database.Db.Where("id = ?", c.Param("id")).First(&tree).Error; err != nil {
-			println(err)
+			fmt.Println(err)
 			c.AbortWithStatus(404)
 		} else {
 			database.Db.Delete(&tree)
