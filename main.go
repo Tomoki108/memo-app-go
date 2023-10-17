@@ -10,7 +10,7 @@ import (
 
 type Tree struct {
 	Id          int       `json:"id" gorm:"primary_key"`
-	Title       string    `json:"title,omitempty" gorm:"not null"`
+	Title       string    `json:"title" gorm:"not null"`
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
@@ -27,8 +27,11 @@ func main() {
 
 	r.POST("/trees", func(c *gin.Context) {
 		var tree Tree
-		if err := c.BindJSON(&tree); err != nil {
+		if err := c.ShouldBindJSON(&tree); err != nil {
 			fmt.Println(err)
+			c.AbortWithStatus(400)
+		} else if tree.Title == "" {
+			fmt.Print("title is empty yo")
 			c.AbortWithStatus(400)
 		} else {
 			database.Db.Create(&tree)
@@ -43,6 +46,21 @@ func main() {
 			c.AbortWithStatus(404)
 		} else {
 			c.JSON(200, tree)
+		}
+	})
+
+	r.PUT("/trees/:id", func(c *gin.Context) {
+		var tree Tree
+		if err := database.Db.Where("id = ?", c.Param("id")).First(&tree).Error; err != nil {
+			fmt.Println(err)
+			c.AbortWithStatus(404)
+		} else {
+			if err := c.ShouldBindJSON(&tree); err != nil {
+				c.AbortWithStatus(400)
+			} else {
+				database.Db.Save(&tree)
+				c.JSON(200, tree)
+			}
 		}
 	})
 
