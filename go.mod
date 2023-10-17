@@ -1,4 +1,4 @@
-module you-tree-backend
+module memo-app-go
 
 go 1.19
 

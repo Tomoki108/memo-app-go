@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
+	"memo-app-go/database"
 	"time"
-	"you-tree-backend/database"
 
 	"github.com/gin-gonic/gin"
 )
