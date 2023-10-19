@@ -1,12 +1,6 @@
-package main
+package models
 
-import (
-	"time"
-
-	"github.com/gin-gonic/gin"
-
-	"memo-app-go/router"
-)
+import "time"
 
 type Memo struct {
 	Id        int       `json:"id" gorm:"primary_key"`
@@ -14,10 +8,4 @@ type Memo struct {
 	Body      string    `json:"body"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-}
-
-func main() {
-	r := gin.Default()
-	router.SetRoutes(r)
-	r.Run() // defaultの8080ポートでAPIを公開
 }
