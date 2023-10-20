@@ -17,7 +17,7 @@ type Memo struct {
 }
 
 func main() {
-	r := gin.Default()
-	router.SetRoutes(r)
-	r.Run() // defaultの8080ポートでAPIを公開
+	engine := gin.Default()
+	router.SetRoutes(engine)
+	engine.Run() // defaultの8080ポートでAPIを公開
 }

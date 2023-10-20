@@ -12,6 +12,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @Summary Get memos
+// @Description Get memos
+// @ID get-memos
+// @Accept  json
+// @Produce  json
+// @Param id path int true "Memo ID"
+// @Success 200 {object} models.Memo
+// @Failure 400
+// @Failure 404
+// @Router /memos/{id} [get]
 func GetMemo(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
