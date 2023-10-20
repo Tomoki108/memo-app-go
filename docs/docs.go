@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/memos/{id}": {
+        "/memos": {
             "get": {
                 "description": "Get memos",
                 "consumes": [
@@ -26,6 +26,69 @@ const docTemplate = `{
                 ],
                 "summary": "Get memos",
                 "operationId": "get-memos",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Memo"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a memo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create a memo",
+                "operationId": "post-memo",
+                "parameters": [
+                    {
+                        "description": "Memo",
+                        "name": "memo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Memo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/models.Memo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/memos/{id}": {
+            "get": {
+                "description": "Get a memo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Get a memo",
+                "operationId": "get-memo",
                 "parameters": [
                     {
                         "type": "integer",
@@ -49,6 +112,86 @@ const docTemplate = `{
                         "description": "Not Found"
                     }
                 }
+            },
+            "put": {
+                "description": "Update a memo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update a memo",
+                "operationId": "put-memo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Memo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Memo",
+                        "name": "memo",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Memo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/models.Memo"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete a memo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete a memo",
+                "operationId": "delete-memo",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Memo ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         }
     },
@@ -56,20 +199,25 @@ const docTemplate = `{
         "models.Memo": {
             "type": "object",
             "properties": {
-                "body": {
-                    "type": "string"
-                },
-                "created_at": {
-                    "type": "string"
-                },
                 "id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "x-order": "0"
                 },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "x-order": "1"
+                },
+                "body": {
+                    "type": "string",
+                    "x-order": "2"
+                },
+                "created_at": {
+                    "type": "string",
+                    "x-order": "3"
                 },
                 "updated_at": {
-                    "type": "string"
+                    "type": "string",
+                    "x-order": "4"
                 }
             }
         }
