@@ -12,10 +12,10 @@ import (
 func SetRoutes(engine *gin.Engine) {
 
 	docs.SwaggerInfo.BasePath = "/api/v1"
+	docs.SwaggerInfo.Title = "memo app"
 
 	{
 		rg := engine.Group("/api/v1")
-		rg.Group("/api/v1")
 		rg.GET("/memos", handlers.GetMemos)
 		rg.POST("/memos", handlers.PostMemo)
 		rg.GET("/memos/:id", handlers.GetMemo)
